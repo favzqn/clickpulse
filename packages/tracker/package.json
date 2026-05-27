@@ -1,0 +1,17 @@
+{
+  "name": "@clickpulse/tracker",
+  "version": "1.0.0",
+  "description": "ClickPulse tracking script - heatmaps & session replay",
+  "main": "dist/clickpulse.js",
+  "module": "dist/clickpulse.esm.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "node build.mjs",
+    "size": "node build.mjs && gzip-size dist/clickpulse.js"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.25.5"
+  }
+}

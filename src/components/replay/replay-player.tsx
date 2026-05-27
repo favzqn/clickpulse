@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -70,7 +70,6 @@ export function ReplayPlayer({ session, pageViews }: ReplayPlayerProps) {
   const [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(1);
   const [currentTime, setCurrentTime] = useState(0);
-  const [activePageView, setActivePageView] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number | null>(null);
   const lastFrameRef = useRef<number>(0);
@@ -81,38 +80,41 @@ export function ReplayPlayer({ session, pageViews }: ReplayPlayerProps) {
     : startTime + 60000;
   const totalDuration = endTime - startTime;
 
-  const allEvents: TimelineEvent[] = [];
+  const allEvents: TimelineEvent[] = useMemo(() => {
+    const events: TimelineEvent[] = [];
 
-  pageViews.forEach((pv, pvIdx) => {
-    const pvStart = new Date(pv.started_at).getTime() - startTime;
+    pageViews.forEach((pv, pvIdx) => {
+      const pvStart = new Date(pv.started_at).getTime() - startTime;
 
-    allEvents.push({
-      time: pvStart,
-      type: "pageview",
-      data: pv,
-      pageViewIndex: pvIdx,
-    });
-
-    pv.clicks.forEach((click) => {
-      allEvents.push({
-        time: new Date(click.timestamp).getTime() - startTime,
-        type: "click",
-        data: click,
+      events.push({
+        time: pvStart,
+        type: "pageview",
+        data: pv,
         pageViewIndex: pvIdx,
+      });
+
+      pv.clicks.forEach((click) => {
+        events.push({
+          time: new Date(click.timestamp).getTime() - startTime,
+          type: "click",
+          data: click,
+          pageViewIndex: pvIdx,
+        });
+      });
+
+      pv.scrolls.forEach((scroll) => {
+        events.push({
+          time: new Date(scroll.timestamp).getTime() - startTime,
+          type: "scroll",
+          data: scroll,
+          pageViewIndex: pvIdx,
+        });
       });
     });
 
-    pv.scrolls.forEach((scroll) => {
-      allEvents.push({
-        time: new Date(scroll.timestamp).getTime() - startTime,
-        type: "scroll",
-        data: scroll,
-        pageViewIndex: pvIdx,
-      });
-    });
-  });
-
-  allEvents.sort((a, b) => a.time - b.time);
+    events.sort((a, b) => a.time - b.time);
+    return events;
+  }, [pageViews, startTime]);
 
   const drawCanvas = useCallback(
     (time: number) => {

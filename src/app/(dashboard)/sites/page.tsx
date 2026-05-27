@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Plus, Globe, Copy, ExternalLink } from "lucide-react";
+import { Plus, Globe, ExternalLink } from "lucide-react";
 import { SiteActions } from "@/components/sites/site-actions";
 
 export const dynamic = "force-dynamic";

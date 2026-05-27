@@ -8,7 +8,6 @@ import {
   CreditCard,
   LogOut,
   MousePointerClick,
-  BarChart3,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useUser } from "@/hooks/use-user";

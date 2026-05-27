@@ -43,9 +43,9 @@ export default async function HeatmapPage({
     .eq("sessions.site_id", siteId)
     .gte("started_at", sinceDate);
 
-  const paths = [
-    ...new Set((pageViewData || []).map((pv: { path: string }) => pv.path)),
-  ].sort();
+  const paths = Array.from(
+    new Set((pageViewData || []).map((pv: { path: string }) => pv.path))
+  ).sort();
 
   const activePath = selectedPath || paths[0] || "/";
 

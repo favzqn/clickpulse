@@ -77,7 +77,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid site key" }, { status: 404 });
   }
 
-  let sessionId = session_id;
+  const sessionId = session_id;
 
   const { data: existingSession } = await supabase
     .from("sessions")

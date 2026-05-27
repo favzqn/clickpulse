@@ -14,7 +14,6 @@ import {
   Scroll,
   Zap,
   Shield,
-  BarChart3,
   ArrowRight,
   Check,
   AlertTriangle,

@@ -38,7 +38,6 @@ interface HeatmapViewProps {
 }
 
 export function HeatmapView({
-  siteId,
   paths,
   activePath,
   clicks,

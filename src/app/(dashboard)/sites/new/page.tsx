@@ -26,6 +26,7 @@ export default function NewSitePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!supabase) return;
     setLoading(true);
 
     const cleanDomain = domain
@@ -37,7 +38,7 @@ export default function NewSitePage() {
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user) {
+    if (!supabase || !user) {
       toast.error("Not authenticated");
       setLoading(false);
       return;

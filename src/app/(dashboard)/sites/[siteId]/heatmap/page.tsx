@@ -53,27 +53,35 @@ export default async function HeatmapPage({
     x: number;
     y: number;
     element_tag: string;
-    element_class: string;
-    element_id: string;
-    element_text: string;
     is_rage_click: boolean;
     is_dead_click: boolean;
-    timestamp: string;
-    page_views: { path: string; viewport_width: number; viewport_height: number } | null;
+    viewport_width: number;
+    viewport_height: number;
   }[] = [];
 
   if (paths.length > 0) {
     const { data: clickData } = await supabase
       .from("click_events")
       .select(
-        "x, y, element_tag, element_class, element_id, element_text, is_rage_click, is_dead_click, timestamp, page_views!inner(path, viewport_width, viewport_height, session_id, sessions!inner(site_id))"
+        "x, y, element_tag, is_rage_click, is_dead_click, page_views!inner(path, viewport_width, viewport_height, sessions!inner(site_id))"
       )
       .eq("page_views.sessions.site_id", siteId)
       .eq("page_views.path", activePath)
       .gte("timestamp", sinceDate)
       .limit(10000);
 
-    clicks = clickData || [];
+    clicks = (clickData || []).map((c: Record<string, unknown>) => {
+      const pv = c.page_views as unknown as { viewport_width: number; viewport_height: number }[];
+      return {
+        x: c.x as number,
+        y: c.y as number,
+        element_tag: (c.element_tag as string) || "",
+        is_rage_click: c.is_rage_click as boolean,
+        is_dead_click: c.is_dead_click as boolean,
+        viewport_width: pv?.[0]?.viewport_width || 1920,
+        viewport_height: pv?.[0]?.viewport_height || 1080,
+      };
+    });
   }
 
   return (
@@ -95,15 +103,7 @@ export default async function HeatmapPage({
         siteId={siteId}
         paths={paths}
         activePath={activePath}
-        clicks={clicks.map((c) => ({
-          x: c.x,
-          y: c.y,
-          element_tag: c.element_tag,
-          is_rage_click: c.is_rage_click,
-          is_dead_click: c.is_dead_click,
-          viewport_width: c.page_views?.viewport_width || 1920,
-          viewport_height: c.page_views?.viewport_height || 1080,
-        }))}
+        clicks={clicks}
         days={daysAgo}
       />
     </div>

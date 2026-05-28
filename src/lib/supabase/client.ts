@@ -11,7 +11,7 @@ export function createClient() {
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!url || !key) {
-    throw new Error("Supabase is not configured");
+    return null;
   }
 
   _client = createBrowserClient(url, key);

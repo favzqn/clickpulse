@@ -44,6 +44,8 @@ export async function POST(request: Request) {
       if (priceId === process.env.STRIPE_PRO_PRICE_ID) plan = "pro";
       if (priceId === process.env.STRIPE_TEAM_PRICE_ID) plan = "team";
 
+      const subWithPeriod = subscription as unknown as { current_period_end: number };
+
       await supabase
         .from("subscriptions")
         .update({
@@ -52,7 +54,7 @@ export async function POST(request: Request) {
           stripe_price_id: priceId,
           status: "active",
           current_period_end: new Date(
-            (subscription as { current_period_end: number }).current_period_end * 1000
+            subWithPeriod.current_period_end * 1000
           ).toISOString(),
           updated_at: new Date().toISOString(),
         })
@@ -67,6 +69,8 @@ export async function POST(request: Request) {
       if (priceId === process.env.STRIPE_PRO_PRICE_ID) plan = "pro";
       if (priceId === process.env.STRIPE_TEAM_PRICE_ID) plan = "team";
 
+      const subUpdated = subscription as unknown as { current_period_end: number };
+
       await supabase
         .from("subscriptions")
         .update({
@@ -74,7 +78,7 @@ export async function POST(request: Request) {
           stripe_price_id: priceId,
           status: subscription.status,
           current_period_end: new Date(
-            (subscription as { current_period_end: number }).current_period_end * 1000
+            subUpdated.current_period_end * 1000
           ).toISOString(),
           updated_at: new Date().toISOString(),
         })

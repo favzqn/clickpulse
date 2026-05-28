@@ -29,6 +29,7 @@ export default function DashboardLayout({
   const supabase = createClient();
 
   const handleSignOut = async () => {
+    if (!supabase) return;
     await supabase.auth.signOut();
     router.push("/");
   };

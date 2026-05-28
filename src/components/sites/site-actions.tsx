@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +17,7 @@ export function SiteActions({ siteId }: { siteId: string }) {
 
   const handleDelete = async () => {
     if (!confirm("Delete this site and all its data?")) return;
+    if (!supabase) return;
 
     const { error } = await supabase.from("sites").delete().eq("id", siteId);
     if (error) {
@@ -30,10 +30,8 @@ export function SiteActions({ siteId }: { siteId: string }) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
+      <DropdownMenuTrigger className="h-8 w-8 p-0 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+        <MoreHorizontal className="h-4 w-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={handleDelete} className="text-destructive">

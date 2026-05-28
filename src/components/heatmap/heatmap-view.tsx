@@ -188,7 +188,7 @@ export function HeatmapView({
         <Select
           value={activePath}
           onValueChange={(value) => {
-            router.push(`${pathname}?${createQueryString({ path: value })}`);
+            if (value) router.push(`${pathname}?${createQueryString({ path: value })}`);
           }}
         >
           <SelectTrigger className="w-[300px]">

@@ -10,6 +10,7 @@ export function AuthButtons({ redirectTo }: { redirectTo?: string }) {
   const [loading, setLoading] = useState<string | null>(null);
 
   const handleOAuthLogin = async (provider: "google" | "github") => {
+    if (!supabase) return;
     setLoading(provider);
     await supabase.auth.signInWithOAuth({
       provider,

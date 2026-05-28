@@ -464,7 +464,7 @@ export function ReplayPlayer({ session, pageViews }: ReplayPlayerProps) {
               <div
                 key={pv.id}
                 className={`flex items-center justify-between rounded-lg border p-3 ${
-                  i === activePageView ? "border-primary" : ""
+                  i === 0 ? "border-primary" : ""
                 }`}
               >
                 <div>
